@@ -1,0 +1,299 @@
+---
+title: "Whodas"
+author: "Oleg"
+date: "14 12 2021"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = TRUE)
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  dpi = 300,
+  warning = FALSE,
+  message = FALSE,
+  out.width = "100%",
+  comment = "#>"
+)
+
+#install.packages("gtsummary")
+#install.packages("ggstatsplot")
+#install.packages('afex')
+
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(gtsummary)
+library(tidyverse)
+library(tidyr)
+library(ggstatsplot)
+```
+
+```{r}
+
+Whodas <- read_xlsx("date/Whodas.xlsx", sheet = "Unite for analysis")
+
+
+df <-  Whodas
+
+```
+
+```{r}
+
+df_long <- df %>%
+  pivot_longer(c(2:15), names_to = "Parameters", values_to = "Value")
+print(df_long)
+
+```
+
+
+
+```{r}
+plt_0 <- ggwithinstats(
+  data = subset(df_long,Parameters == "Do1" | Parameters == "Do1F"),
+  type = "nonparametric", 
+  x = Parameters,
+  y = Value,
+  xlab = "Measurements",
+  ylab = "Do1"
+)
+plt_0
+
+
+```
+
+
+
+```{r}
+plt_0 <- ggwithinstats(
+  data = subset(df_long,Parameters == "Do2" | Parameters == "Do2F"),
+  type = "nonparametric", 
+  x = Parameters,
+  y = Value,
+  xlab = "Measurements",
+  ylab = "Do2"
+)
+plt_0
+
+
+```
+
+```{r}
+plt_0 <- ggwithinstats(
+  data = subset(df_long,Parameters == "Do3" | Parameters == "Do3F"),
+  type = "nonparametric", 
+  x = Parameters,
+  y = Value,
+  xlab = "Measurements",
+  ylab = "Do3"
+)
+plt_0
+
+
+```
+
+
+
+```{r}
+plt_0 <- ggwithinstats(
+  data = subset(df_long,Parameters == "Do4" | Parameters == "Do4F"),
+  type = "nonparametric", 
+  x = Parameters,
+  y = Value,
+  xlab = "Measurements",
+  ylab = "Do4"
+)
+plt_0
+
+
+```
+
+
+
+
+```{r}
+plt_0 <- ggwithinstats(
+  data = subset(df_long,Parameters == "Do51" | Parameters == "Do51F"),
+  type = "nonparametric", 
+  x = Parameters,
+  y = Value,
+  xlab = "Measurements",
+  ylab = "Do51"
+)
+plt_0
+
+
+```
+
+
+
+```{r}
+plt_0 <- ggwithinstats(
+  data = subset(df_long,Parameters == "Do6" | Parameters == "Do6F"),
+  type = "nonparametric", 
+  x = Parameters,
+  y = Value,
+  xlab = "Measurements",
+  ylab = "Do6"
+)
+plt_0
+
+
+```
+
+
+
+
+
+```{r}
+plt_0 <- ggwithinstats(
+  data = subset(df_long,Parameters == "st_s32" | Parameters == "st_s32F"),
+  type = "nonparametric", 
+  x = Parameters,
+  y = Value,
+  xlab = "Measurements",
+  ylab = "st_s32"
+)
+plt_0
+
+
+```
+
+
+```{r}
+### Graphs dor initial situation
+
+df_long_alternativ <- df %>%
+  pivot_longer(c(2:8), names_to = "Parameters", values_to = "Value")
+
+df_long_alternativ$Parameters = as.factor(df_long_alternativ$Parameters)
+
+
+ggplot(df_long_alternativ, aes(x = Parameters, y = Value, fill=Parameters))+
+  geom_boxplot(alpha=0.6)+
+  ggtitle("Profilul initial indicatorilor Whodas")
+
+
+```
+
+
+```{r}
+library("ggradar")
+library(tidyverse)
+
+whodas_scores <- data.frame(
+  row.names = c("Patient x", "Patient x follow-up"),
+  Do1 = c(65, 5),
+  Do2 = c(56.25, 25),
+  Do3 = c(40, 0),
+  Do4 = c(66.67, 0),
+  Do51 = c(90, 0),
+  Do6 = c(70.83, 0)
+  
+  # 65.22 vs 5.43
+)
+
+
+df <- whodas_scores %>% rownames_to_column("Values")
+df
+
+```
+
+```{r}
+
+#install.packages("devtools")
+#devtools::install_github("ricardo-bion/ggradar")
+
+```
+
+
+
+```{r}
+#library (ggradar)
+#ggradar(
+  ##df[1, ], 
+  #values.radar = c("0", "10", "20", "30", "40", "50", "60", "70", "80"),
+  #grid.min = 0, grid.max = 90
+ # )
+
+```
+
+```{r}
+
+#ggradar(
+  #df, 
+  #values.radar = c("0", "20", "40", "60", "80"),
+  #grid.min = 0, grid.max = 90,
+  # Polygons
+  
+  #group.line.width = 1, 
+  #group.point.size = 3,
+  #group.colours = c("#00AFBB", "#E7B800"),
+  # Background and grid lines
+  #background.circle.colour = "white",
+  #gridline.mid.colour = "grey",
+  #legend.position = "bottom",
+  #)
+
+
+```
+
+```{r}
+
+###https://rdrr.io/cran/ggiraphExtra/man/ggRadar.html
+
+#install.packages("ggiraphExtra")
+library(ggiraphExtra)
+
+#install.packages("devtools")
+#devtools::install_github("cardiomoon/ggiraphExtra")
+
+ggRadar(data=df, 
+        rescale = FALSE,
+        aes(color=Values),
+        #grid.min = 0, grid.max = 90,
+        #values.radar = c(0, 50, 100),
+        plot.title = "Profilul initial indicatorilor Whodas",
+        interactive = TRUE)
+```
+
+
+```{r}
+
+
+ggRadar(Whodas,
+        aes(x=c(Do1, Do2, Do3, Do4, Do51, Do6)),
+        ylim = c(0, 50),
+        scales = "free_y",
+        rescale = FALSE,
+        plot.title = "Profilul initial indicatorilor Whodas",
+        interactive = TRUE
+        )
+
+ggplot(df_long_alternativ, aes(x = Parameters, y = Value, fill=Parameters))+
+  geom_boxplot(alpha=0.6)+
+  ggtitle("Profilul initial indicatorilor Whodas")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
